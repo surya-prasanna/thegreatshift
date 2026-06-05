@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bachata — Mi Proyecto Final de Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --cream: #fbf9f4;
+    --ink: #0f1419;
+    --ink-soft: #2a2f3a;
+    --muted: #5b6472;
+    --gold: #c8a24c;
+    --gold-deep: #a07e2c;
+    --gold-glow: rgba(200, 162, 76, 0.18);
+    --sky: #7cc4e6;
+    --sky-soft: #e6f4fb;
+    --sky-deep: #3e8fb8;
+    --line: rgba(15, 20, 25, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--white);
+    line-height: 1.65;
+    font-size: 17px;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--gold); color: #fff; }
+
+  /* NAV */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .4s ease, padding .4s ease;
+  }
+  .nav.scrolled { border-bottom-color: var(--line); padding: 14px 40px; }
+  .nav__brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav__brand .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 4px var(--gold-glow);
+  }
+  .nav__links { display: flex; gap: 36px; }
+  .nav__links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    position: relative;
+    padding: 4px 0;
+    transition: color .25s ease;
+  }
+  .nav__links a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 0; height: 1.5px;
+    background: var(--gold);
+    transition: width .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .nav__links a:hover { color: var(--sky-deep); }
+  .nav__links a:hover::after { width: 100%; }
+  @media (max-width: 720px) { .nav__links { display: none; } .nav { padding: 16px 24px; } }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 40px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero__eyebrow {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+  .hero__eyebrow::before {
+    content: ''; width: 36px; height: 1px; background: var(--gold);
+  }
+  .hero__title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(54px, 9vw, 132px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+  .hero__title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold-deep);
+    position: relative;
+  }
+  .hero__sub {
+    font-size: clamp(17px, 1.6vw, 21px);
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.55;
+    font-weight: 400;
+  }
+  .hero__meta {
+    margin-top: 60px;
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .hero__meta div { display: flex; flex-direction: column; gap: 4px; }
+  .hero__meta span:first-child {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .hero__meta span:last-child {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .hero__scroll {
+    position: absolute;
+    bottom: 40px; left: 40px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero__scroll .line {
+    width: 40px; height: 1px; background: var(--ink-soft);
+    animation: scrollLine 2.4s ease-in-out infinite;
+    transform-origin: left;
+  }
+  @keyframes scrollLine {
+    0%, 100% { transform: scaleX(0.3); opacity: 0.4; }
+    50% { transform: scaleX(1); opacity: 1; }
+  }
+
+  /* SECTIONS */
+  section.section {
+    padding: 140px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .section__head {
+    margin-bottom: 80px;
+    max-width: 800px;
+  }
+  .section__num {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section__num::before {
+    content: ''; width: 8px; height: 8px; background: var(--gold); border-radius: 50%;
+  }
+  .section__title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 5.6vw, 76px);
+    line-height: 1.02;
+    letter-spacing: -0.028em;
+    margin-bottom: 24px;
+    position: relative;
+    display: inline-block;
+  }
+  .section__title::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -14px;
+    width: 64px; height: 3px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+  .section__lede {
+    font-size: 19px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-top: 38px;
+    max-width: 620px;
+    font-weight: 400;
+  }
+
+  /* PROSE */
+  .prose p {
+    font-size: 18px;
+    line-height: 1.78;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+    max-width: 720px;
+  }
+  .prose p strong { color: var(--ink); font-weight: 600; }
+
+  /* PERSONAL SECTION */
+  .personal {
+    background: linear-gradient(180deg, var(--white) 0%, var(--cream) 100%);
+  }
+  .personal__grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 100px;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .personal__grid { grid-template-columns: 1fr; gap: 60px; } }
+
+  .quote-card {
+    background: var(--sky-soft);
+    border-left: 3px solid var(--sky);
+    padding: 40px 38px;
+    border-radius: 4px;
+    position: relative;
+    margin: 40px 0;
+    transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease;
+  }
+  .quote-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 60px -30px rgba(62, 143, 184, 0.35);
+  }
+  .quote-card::before {
+    content: '"';
+    font-family: 'Fraunces', serif;
+    position: absolute;
+    top: -10px; left: 26px;
+    font-size: 80px;
+    color: var(--sky);
+    line-height: 1;
+    font-weight: 600;
+  }
+  .quote-card p {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--sky-deep);
+    font-style: italic;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  /* ARTIST SECTIONS */
+  .artist {
+    background: var(--white);
+  }
+  .artist--alt { background: var(--cream); }
+  .artist__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-top: 40px;
+  }
+  @media (max-width: 900px) { .artist__grid { grid-template-columns: 1fr; gap: 50px; } }
+
+  .artist__block { margin-bottom: 48px; }
+  .artist__block h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    position: relative;
+    padding-left: 18px;
+  }
+  .artist__block h3::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 14px;
+    width: 8px; height: 2px;
+    background: var(--gold);
+  }
+
+  /* VIDEO */
+  .video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--ink);
+    box-shadow: 0 30px 80px -40px rgba(15, 20, 25, 0.45),
+                0 0 0 1px var(--line);
+    transition: transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .6s ease;
+  }
+  .video-frame:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 40px 100px -30px rgba(200, 162, 76, 0.4),
+                0 0 0 1px var(--gold);
+  }
+  .video-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .video-caption {
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .video-caption::before {
+    content: '▶'; color: var(--gold); font-size: 9px;
+  }
+
+  /* FACTS */
+  .facts {
+    margin-top: 40px;
+    padding: 36px 38px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    border-top: 3px solid var(--gold);
+    transition: transform .4s ease, box-shadow .4s ease;
+  }
+  .artist--alt .facts { background: var(--white); }
+  .facts:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 50px -30px rgba(15, 20, 25, 0.25);
+  }
+  .facts h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--gold-deep);
+    font-weight: 600;
+    margin-bottom: 22px;
+  }
+  .facts ul { list-style: none; }
+  .facts li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    display: flex; gap: 14px;
+    transition: padding-left .3s ease, color .3s ease;
+  }
+  .facts li:last-child { border-bottom: 0; }
+  .facts li:hover { padding-left: 8px; color: var(--sky-deep); }
+  .facts li::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-top: 10px;
+    flex-shrink: 0;
+  }
+
+  /* ARTIST HEADER CARD */
+  .artist__card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 36px;
+    align-items: center;
+    padding: 36px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 60px;
+  }
+  .artist__monogram {
+    font-family: 'Fraunces', serif;
+    font-size: 68px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: transform .6s cubic-bezier(.2,.8,.2,1), background .4s ease, color .4s ease;
+  }
+  .artist__monogram:hover {
+    transform: rotate(360deg);
+    background: var(--gold);
+    color: #fff;
+  }
+  .artist__card-meta { display: flex; flex-direction: column; gap: 8px; }
+  .artist__card-meta strong {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .artist__card-meta span {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .artist__card-meta .tag {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    font-weight: 600;
+  }
+
+  /* COMPARE SECTION */
+  .compare {
+    background: linear-gradient(180deg, var(--cream) 0%, var(--white) 100%);
+  }
+  .compare__intro {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(24px, 2.6vw, 32px);
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 820px;
+    margin-bottom: 80px;
+    font-weight: 400;
+    letter-spacing: -0.012em;
+  }
+  .compare__intro em { color: var(--gold-deep); font-style: italic; }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 900px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-cell {
+    padding: 48px 40px;
+    border-right: 1px solid var(--line);
+    transition: background .4s ease;
+  }
+  .compare-cell:nth-child(2n) { border-right: 0; }
+  @media (max-width: 900px) {
+    .compare-cell { border-right: 0; border-bottom: 1px solid var(--line); }
+    .compare-cell:last-child { border-bottom: 0; }
+  }
+  .compare-cell:hover { background: var(--sky-soft); }
+  .compare-cell h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--gold-deep);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .compare-cell h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+  }
+  .compare-cell p {
+    font-size: 16.5px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  .compare__closer {
+    margin-top: 100px;
+    padding: 60px 50px;
+    background: var(--sky-soft);
+    border-radius: 8px;
+    border-left: 3px solid var(--sky);
+    position: relative;
+    overflow: hidden;
+  }
+  .compare__closer::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, var(--gold-glow), transparent 70%);
+    pointer-events: none;
+  }
+  .compare__closer h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--sky-deep);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .compare__closer p {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 760px;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 80px 40px 50px;
+    text-align: center;
+    border-top: 1px solid var(--line);
+    margin-top: 60px;
+  }
+  footer p {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  footer .gold {
+    color: var(--gold-deep);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  /* REVEAL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal--delay-1 { transition-delay: .1s; }
+  .reveal--delay-2 { transition-delay: .2s; }
+  .reveal--delay-3 { transition-delay: .3s; }
+
+  /* TEXT HIGHLIGHTS */
+  .hl { color: var(--gold-deep); font-weight: 500; }
+  .hl-sky { color: var(--sky-deep); font-weight: 500; }
+
+  @media (max-width: 720px) {
+    .hero, section.section { padding-left: 24px; padding-right: 24px; }
+    .hero { padding-top: 110px; }
+    section.section { padding-top: 90px; padding-bottom: 90px; }
+    .hero__scroll { left: 24px; }
+    .compare-cell { padding: 36px 24px; }
+    .compare__closer { padding: 40px 28px; }
+    .quote-card { padding: 32px 26px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav__brand"><span class="dot"></span>Bachata</div>
+  <div class="nav__links">
+    <a href="#conexion">Conexión</a>
+    <a href="#romeo">Romeo Santos</a>
+    <a href="#turizo">Manuel Turizo</a>
+    <a href="#comparacion">Comparación</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero__eyebrow reveal">Proyecto Final de Español</div>
+  <h1 class="hero__title reveal reveal--delay-1">La <em>Bachata</em>,<br/>una puerta abierta.</h1>
+  <p class="hero__sub reveal reveal--delay-2">Cómo una canción me llevó a un idioma, a dos artistas, y a una historia más grande que yo. Un ensayo visual sobre Romeo Santos, Manuel Turizo y el sonido que sigo escuchando.</p>
+
+  <div class="hero__meta reveal reveal--delay-3">
+    <div><span>Autor</span><span>Surya Prasanna</span></div>
+    <div><span>Curso</span><span>Español — Proyecto Final</span></div>
+    <div><span>Tema</span><span>Bachata Moderna</span></div>
+  </div>
+
+  <div class="hero__scroll"><span class="line"></span> Desplázate</div>
+</header>
+
+<!-- SECTION 1 -->
+<section class="section personal" id="conexion">
+  <div class="section__head reveal">
+    <div class="section__num">Sección 01</div>
+    <h2 class="section__title">Mi conexión personal</h2>
+    <p class="section__lede">Una canción que ganó un torneo en mi clase abrió la puerta a un idioma entero.</p>
+  </div>
+
+  <div class="personal__grid">
+    <div class="prose reveal">
+      <p>Cuando estaba en mi primer año de secundaria, mi clase de español hizo una actividad que se llamaba <strong>"Batalla de las Bandas."</strong> Era como el torneo de March Madness, pero con canciones en español. Las canciones competían una contra otra, nosotros votábamos, y poco a poco quedaban menos. La canción que ganó todo fue <span class="hl">"La Bachata" de Manuel Turizo</span>.</p>
+
+      <p>Yo voté por ella. Y cuando la clase terminó, seguí escuchándola. La escuché otra vez, y otra vez más. Algo de esa música triste y de la voz de Turizo se me quedó adentro.</p>
+
+      <div class="quote-card">
+        <p>Esa sola canción me abrió una puerta. Empecé a escuchar más bachata, y después más música en español de todo tipo.</p>
+      </div>
+
+      <p>Sin me da cuenta, también estaba aprendiendo español. No con listas de palabras ni con reglas de gramática, sino escuchando una y otra vez. Cuando oía una frase que no entendía bien, la buscaba. A veces escuchaba una estructura que mi profesora había explicado el día anterior, y de repente todo tenía sentido.</p>
+
+      <p>En aquel momento, yo no podía seguir bien la letra de "La Bachata." Mi español funcionaba, pero estaba muy, muy lejos de ser perfecto. Hoy es diferente. Uno de mis artistas favoritos es <span class="hl">Romeo Santos</span> — muchos dicen que es el mejor de la bachata — y ahora entiendo casi toda su música. Sus letras no son simples. Si yo no hubiera escuchado tanta música durante estos años, no las entendería. La realidad de que las pueda seguir ahora me muestra cuánto he crecido.</p>
+
+      <p>La bachata me dio una razón para seguir escuchando, y escuchar me hizo mejor. Voy a seguir escuchando en el futuro. Me encanta mucho. <span class="hl-sky">Es la que estoy escuchando ahora mismo, cuando estoy haciendo este proyecto.</span></p>
+    </div>
+
+    <div class="reveal reveal--delay-1">
+      <div class="video-frame">
+        <iframe src="https://www.youtube.com/embed/EusYkjHOJ-c" title="La Bachata — Manuel Turizo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-caption">La Bachata · Manuel Turizo · La canción que empezó todo</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 -->
+<section class="section artist" id="romeo">
+  <div class="section__head reveal">
+    <div class="section__num">Sección 02</div>
+    <h2 class="section__title">Romeo Santos</h2>
+    <p class="section__lede">El Rey de la Bachata. El artista que llevó un sonido del Bronx a estadios llenos en todo el mundo.</p>
+  </div>
+
+  <div class="artist__card reveal">
+    <div class="artist__monogram">R</div>
+    <div class="artist__card-meta">
+      <strong>Anthony "Romeo" Santos</strong>
+      <span>Nacido el 21 de julio de 1981 · El Bronx, Nueva York</span>
+      <span class="tag">El Rey de la Bachata</span>
+    </div>
+  </div>
+
+  <div class="artist__grid">
+    <div>
+      <div class="artist__block reveal">
+        <h3>¿Quién es Romeo Santos?</h3>
+        <div class="prose">
+          <p>Anthony "Romeo" Santos nació el 21 de julio de 1981 en el Bronx, Nueva York. Su padre era dominicano y su madre era puertorriqueña. Cuando era niño, cantaba en el coro de una iglesia. A los 14 años, entró en un grupo de música con su primo y unos amigos. Más tarde, ese grupo cambió su nombre a <span class="hl">Aventura</span>.</p>
+        </div>
+      </div>
+
+      <div class="artist__block reveal">
+        <h3>El grupo Aventura</h3>
+        <div class="prose">
+          <p>Aventura tenía cuatro miembros: Romeo, Lenny, Henry y Max Santos. Mucha gente dice que ellos crearon la <span class="hl">"bachata moderna,"</span> porque escribieron letras sobre más cosas, no solo sobre el amor triste, y mezclaron la bachata con el R&amp;B y el pop. Al principio, tocaban en fiestas pequeñas. Pero crecieron muy rápido. En 2010, Aventura llenó cuatro conciertos en el Madison Square Garden.</p>
+        </div>
+      </div>
+
+      <div class="artist__block reveal">
+        <h3>Su carrera sola</h3>
+        <div class="prose">
+          <p>Cuando empezó su carrera sola en 2011, Romeo hizo más fuerte todo lo que lo hacía especial: su voz con mucho sentimiento y sus letras como de película. Su primer álbum, <em>Formula, Vol. 1</em>, vendió más de 300,000 copias. En el segundo álbum cantó con Drake, Nicki Minaj y Marc Anthony, y fue el álbum latino más vendido de 2014.</p>
+          <p>También hizo historia. En 2014, Romeo se convirtió en el <span class="hl-sky">primer artista latino en hacer un concierto grande en el Yankee Stadium</span> de Nueva York. Antes de él, casi nadie había llevado la bachata a un lugar tan grande.</p>
+        </div>
+      </div>
+
+      <div class="artist__block reveal">
+        <h3>Su estilo</h3>
+        <div class="prose">
+          <p>Romeo no solo hizo la bachata más popular, también la llevó a todo el mundo. Antes de él, mucha gente pensaba que era un tipo de música pequeña, solo de una región. Él siempre canta en español, y eso ayudó a que la música en español llegará a personas de todo el mundo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="reveal">
+        <div class="video-frame">
+          <iframe src="https://www.youtube.com/embed/QFs3PIZb3js" title="Propuesta Indecente — Romeo Santos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-caption">Propuesta Indecente · Romeo Santos</div>
+      </div>
+
+      <div class="facts reveal reveal--delay-1">
+        <h4>Datos curiosos</h4>
+        <ul>
+          <li>En 2013, salió en Plaza Sésamo, cantando una canción sobre la amistad.</li>
+          <li>Su gira <em>Fórmula Vol. 3</em> ganó más de 106 millones de dólares. También salió en la película <em>Rápidos y Furiosos 7</em>.</li>
+          <li>El video de "Propuesta Indecente" fue el segundo video latino en pasar mil millones de vistas en YouTube.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 -->
+<section class="section artist artist--alt" id="turizo">
+  <div class="section__head reveal">
+    <div class="section__num">Sección 03</div>
+    <h2 class="section__title">Manuel Turizo</h2>
+    <p class="section__lede">El colombiano que viajó desde el pop urbano hasta una bachata que sonó alrededor del mundo.</p>
+  </div>
+
+  <div class="artist__card reveal">
+    <div class="artist__monogram">M</div>
+    <div class="artist__card-meta">
+      <strong>Manuel Turizo</strong>
+      <span>Nacido el 12 de abril de 2000 · Montería, Colombia</span>
+      <span class="tag">Una voz entre lo urbano y el corazón</span>
+    </div>
+  </div>
+
+  <div class="artist__grid">
+    <div>
+      <div class="artist__block reveal">
+        <h3>¿Quién es Manuel Turizo?</h3>
+        <div class="prose">
+          <p>Manuel Turizo nació el 12 de abril del año 2000 en Montería, Colombia. Empezó a hacer música a los 13 años. Cuando Manuel nació, sus padres le dieron una guitarra y un micrófono a su hermano mayor, Julián, para que él no sintiera celos del bebé nuevo. Años después, Manuel trató de aprender la guitarra de su hermano. Sentía que no era bueno, así que prefirió cantar.</p>
+          <p>Aquí hay algo cómico: <span class="hl">al principio, Manuel quería ser veterinario</span>. Pero después de unas clases de canto con un maestro cubano, escogió la música.</p>
+        </div>
+      </div>
+
+      <div class="artist__block reveal">
+        <h3>Su carrera</h3>
+        <div class="prose">
+          <p>Se hizo famoso con su canción <em>"Una Lady Como Tú"</em> en 2016, que ganó un premio en Colombia. En 2018, la revista <em>Billboard</em> lo nombró uno de los artistas latinos que había que ver. Después sacó su primer álbum, <em>ADN</em>, en 2019.</p>
+          <p>Y luego llegó la canción que cambió todo.</p>
+        </div>
+      </div>
+
+      <div class="artist__block reveal">
+        <h3>"La Bachata" — un momento enorme</h3>
+        <div class="prose">
+          <p>Cuando salió en mayo de 2022, "La Bachata" era diferente de su música urbana de antes. Con sus guitarras tristes, sonaba como la Aventura de los años 2000. Llegó al número uno en Argentina, México y en una lista de Estados Unidos. Hoy tiene <span class="hl">más de mil millones de reproducciones</span> en Spotify.</p>
+
+          <div class="quote-card">
+            <p>Hasta Coldplay se dio cuenta. Chris Martin lo llamó por teléfono cuando Manuel estaba en Madrid, para invitarlo a cantar "La Bachata" en un concierto de Coldplay en Bogotá.</p>
+          </div>
+
+          <p>Manuel tomó un avión a Colombia de inmediato. Si yo hubiera recibido esa llamada, creo que no lo habría creído.</p>
+        </div>
+      </div>
+
+      <div class="artist__block reveal">
+        <h3>Su estilo</h3>
+        <div class="prose">
+          <p>Su música tiene cosas del pop, del trap y del vallenato. Tiene una voz suave que se mueve fácil entre lo urbano y las canciones de amor. A él no le gusta que lo pongan en una sola caja.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="reveal">
+        <div class="video-frame">
+          <iframe src="https://www.youtube.com/embed/gOL_IroNcVc" title="Una Lady Como Tú — Manuel Turizo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-caption">Una Lady Como Tú · Manuel Turizo</div>
+      </div>
+
+      <div class="facts reveal reveal--delay-1">
+        <h4>Datos curiosos</h4>
+        <ul>
+          <li>Cuando era niño, veía videos de conciertos de Wisin &amp; Yandel, Chris Brown y Justin Bieber, y bailaba como ellos frente al espejo.</li>
+          <li>Tiene tatuajes de las caras de su mamá y su papá en el brazo.</li>
+          <li>Su álbum de 2023 se llama <em>2000</em> — el año en que nació.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 -->
+<section class="section compare" id="comparacion">
+  <div class="section__head reveal">
+    <div class="section__num">Sección 04</div>
+    <h2 class="section__title">Romeo y Turizo</h2>
+  </div>
+
+  <p class="compare__intro reveal">La bachata nunca ha sido una sola cosa. Y <em>Romeo Santos</em> y <em>Manuel Turizo</em> lo prueban — dos caminos distintos hacia el mismo sentimiento.</p>
+
+  <div class="compare-grid reveal">
+    <div class="compare-cell">
+      <h4>De dónde vienen — Romeo</h4>
+      <h3>Una herencia familiar</h3>
+      <p>Romeo creció en el Bronx, hijo de padres dominicanos y puertorriqueños. La bachata ya estaba en su familia, en su cultura. Romeo recibió la bachata como una herencia.</p>
+    </div>
+    <div class="compare-cell">
+      <h4>De dónde vienen — Turizo</h4>
+      <h3>Un encuentro desde afuera</h3>
+      <p>Turizo creció en Montería, una ciudad de la costa de Colombia, rodeado de vallenato y pop. Llegó a la bachata desde afuera, como alguien que se enamoró del sonido.</p>
+    </div>
+    <div class="compare-cell">
+      <h4>Sus sonidos — Romeo</h4>
+      <h3>Tradición que crece</h3>
+      <p>La bachata de Romeo es más tradicional. Tiene la guitarra romántica, el amor, la tristeza, las historias que vienen de la música vieja de la República Dominicana. Cuando él la mezcla con el R&amp;B, parece algo que crece desde adentro.</p>
+    </div>
+    <div class="compare-cell">
+      <h4>Sus sonidos — Turizo</h4>
+      <h3>Libertad de género</h3>
+      <p>Turizo es más libre. "La Bachata" fue un salto a algo nuevo para él, y siempre ha dicho que no quiere ser de un solo tipo de música. Donde Romeo se queda en la bachata, Turizo solo pasa por ella en un viaje más largo.</p>
+    </div>
+    <div class="compare-cell">
+      <h4>Lo que han logrado — Romeo</h4>
+      <h3>Ya es una leyenda</h3>
+      <p>Ha llenado estadios enormes, ha cantado con Drake y con Usher, y tiene el título de <span class="hl">Rey de la Bachata</span>. Si no hubiera existido Romeo, quizás la bachata no sería tan famosa hoy.</p>
+    </div>
+    <div class="compare-cell">
+      <h4>Lo que han logrado — Turizo</h4>
+      <h3>Una historia que empieza</h3>
+      <p>Turizo todavía está escribiendo sus propias cuentas. Solo tiene 26 años, y "La Bachata" ya es su momento más grande. <span class="hl-sky">Su futuro está abierto.</span></p>
+    </div>
+  </div>
+
+  <div class="compare__closer reveal">
+    <h4>Lo que comparten</h4>
+    <p>Los dos entienden que la bachata es, sobre todo, sentimiento — amor, pérdida, cosas del corazón. Los dos han ayudado a que más gente conozca esta música. Y para un estudiante de español en el estado de Washington, los dos hicieron algo importante: <strong>me hicieron apreciar este idioma.</strong></p>
+  </div>
+</section>
+
+<footer>
+  <p>Mi Proyecto Final de Español · <span class="gold">Bachata</span> · 2026</p>
+</footer>
+
+<script>
+  // Nav scroll state
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
